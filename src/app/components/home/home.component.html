@@ -1,0 +1,112 @@
+<section class="container-fluid px-3">
+    <h4>{{ title }}</h4>
+
+    <form [formGroup]="formulario" (ngSubmit)="cargarDatosPorMes()">
+        <div class="row mb-3">
+            <div class="col col-2">
+                <label for="mes">Mes:</label>
+                <ng-select [items]="meses"
+                  bindLabel="name"
+                  bindValue="number"
+                  formControlName="mes"
+                  [searchable]="true"
+                  placeholder="Mes"
+                ></ng-select>
+            </div>
+            <div class="col col-2">
+                <label for="anio">Año:</label>
+                <input type="number" id="anio" formControlName="anio" class="form-control" min="2025" max="2100" />
+            </div>
+            <div class="col col-1 d-flex align-items-end">
+                <button class="btn btn-primary" type="submit">Buscar</button>
+            </div>
+            <div class="col col-4"></div>
+            <div class="card col-2">
+                <div class="card-body card-text d-flex align-items-center gap-2">
+                    <h5>Total:</h5><h5 style="color: red;">{{ totalMes | number:'1.2-2' }}</h5> 
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-bordered table-info">
+            <tr>
+                <th style="width: 10%">Razón</th>
+                <th style="width: 10%">Total</th>
+                <th style="width: 10%">Fecha</th>
+                <th style="width: 55%">Productos</th>
+                <th style="width: 15%">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let gasto of datos | paginate: { itemsPerPage: 5, currentPage: page }">
+                <td style="width: 10%">{{ gasto.razon }}</td>
+                <td style="width: 10%">{{ gasto.total }}</td>
+                <td style="width: 10%">{{ gasto.fecha }}</td>
+                <td style="width: 55%">
+                    <div style="max-height: 10em; overflow-y: auto;">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Cantidad</th>
+                                <th>Valor Unitario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let prod of gasto.productos">
+                                <td>{{ prod.nombre }}</td>
+                                <td>{{ prod.marca }}</td>
+                                <td>{{ prod.cantidad }}</td>
+                                <td>{{ prod.valorUnitario }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </td>
+                <td style="width: 15%"><button type="button" class="btn btn-outline-danger btn-sm py-0" data-bs-toggle="modal" 
+                    data-bs-target="#confirmModal" (click)="seleccionarGasto(gasto)">Eliminar</button>
+                <button type="button" class="btn btn-outline-success btn-sm py-0 ms-3" data-bs-toggle="modal" 
+                    data-bs-target="#editModal" (click)="seleccionarGasto(gasto)">Editar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+</section>
+
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Eliminar Gasto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de eliminar este gasto?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="eliminarGasto" (click)="eliminarGasto()" data-bs-dismiss="modal">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Editar Gasto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="editarGasto" data-bs-dismiss="modal" (click)="editarCarga()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
