@@ -17,6 +17,8 @@ import { ConfiguracionComponent } from './components/configuracion/configuracion
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
+import { NgChartsModule } from 'ng2-charts';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 registerLocaleData(localeEsAr);
 
@@ -37,7 +39,9 @@ registerLocaleData(localeEsAr);
     NgxPaginationModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    NgSelectModule
+    NgSelectModule,
+    NgChartsModule,
+    DragDropModule,
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es-AR' }],
   bootstrap: [AppComponent]
