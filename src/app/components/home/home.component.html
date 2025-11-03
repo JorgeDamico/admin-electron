@@ -33,7 +33,7 @@
                 </div>
               <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#estadisticasModal" 
                 (click)="procesarEstadisticas(formulario.value.type)" [disabled]="datos.length === 0 || formulario.value.type === ''">
-                  Estadística del mes
+                  Estadísticas
               </button>
             </div>
             <div class="card col-2">
@@ -130,7 +130,7 @@
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="estadisticasLabel">Estadísticas de gastos - {{ getNombreMes() }}</h5>
+        <h5 class="modal-title" id="estadisticasLabel">Estadísticas de gastos - {{ formulario.value.type === 'anual' ? 'Anual' : getNombreMes() }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">

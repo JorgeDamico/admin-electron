@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit{
 
   title = 'Gastos';
   datos: any[] = [];
+  datosAnuales: any[] = [];
   meses = [
     { number: '01', name: 'Enero' },
     { number: '02', name: 'Febrero' },
@@ -74,6 +75,7 @@ export class HomeComponent implements OnInit{
     if ((window as any).electronAPI.existsFile(filePath)) {
       const contenido = (window as any).electronAPI.readFile(filePath);
       data = JSON.parse(contenido);
+      this.datosAnuales = data;
       this.datos = data[clave] || [];
       this.totalMes = this.datos.reduce((acc: number, gasto: any) => acc + (gasto.total || 0), 0);
     } else {
@@ -181,20 +183,17 @@ export class HomeComponent implements OnInit{
 
     if (type === 'anual') {
       const gastosPorMes = new Map<string, number>();
+      console.log("data: ", this.datosAnuales);
 
-      this.datos.forEach((gasto: any) => {
-        const partesFecha = gasto.fecha?.split('-');
-        const mes = partesFecha?.[1];
-
-        if (mes) {
+      Object.entries(this.datosAnuales || {}).forEach(([mes, gastos]: [string, any[]]) => {
+        gastos.forEach((gasto: any) => {
           gastosPorMes.set(mes, (gastosPorMes.get(mes) || 0) + gasto.total);
-        }
+        });
       });
 
-      const mesesOrdenados = Array.from({ length: 12 }, (_, i) => {
-        const mes = (i + 1).toString().padStart(2, '0');
-        return mes;
-      });
+      const mesesOrdenados = Array.from({ length: 12 }, (_, i) =>
+        (i + 1).toString().padStart(2, '0')
+      );
 
       const labels = mesesOrdenados.map(m => {
         const encontrado = this.meses.find(mes => mes.number === m);
@@ -207,7 +206,7 @@ export class HomeComponent implements OnInit{
         labels,
         datasets: [
           {
-            label: 'Gasto total mensual',
+            label: 'Gasto anual por mes',
             data,
             borderColor: '#dc3545',
             backgroundColor: 'rgba(220,53,69,0.2)',
@@ -215,7 +214,6 @@ export class HomeComponent implements OnInit{
             tension: 0.3,
             type: 'line'
           } as ChartDataset<'line'>
-
         ]
       };
     }
