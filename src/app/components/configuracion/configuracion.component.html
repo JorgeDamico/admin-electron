@@ -3,9 +3,12 @@
     <div class="row">
         <div class="col col-6">
             <div class="row">
-                <div class="col col-2"><h5>Productos:</h5></div>
-                <div class="col col-1 d-flex align-items-center"><button type="button" class="btn btn-outline-success btn-sm py-0"
-                    data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="elegirItem('productos')">Nuevo</button></div>
+                <div class="col col-2">
+                    <h5>Productos:</h5>
+                </div>
+                <div class="col col-1 d-flex align-items-center"><button type="button"
+                        class="btn btn-outline-success btn-sm py-0" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal" (click)="elegirItem('productos')">Nuevo</button></div>
             </div>
             <table class="table table-bordered table-striped">
                 <thead class="table-bordered table-info">
@@ -16,10 +19,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let producto of productos | paginate: { itemsPerPage: 4, currentPage: pageProductos, id: 'productos' }">
+                    <tr
+                        *ngFor="let producto of productos | paginate: { itemsPerPage: 4, currentPage: pageProductos, id: 'productos' }">
                         <td>{{ producto.id }}</td>
                         <td>{{ producto.producto }}</td>
-                        <td><button type="button" class="btn btn-outline-danger btn-sm py-0" (click)="eliminarItem('productos', producto.id)">Eliminar</button></td>
+                        <td><button type="button" class="btn btn-outline-danger btn-sm py-0"
+                                (click)="eliminarItem('productos', producto.id)">Eliminar</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -27,9 +32,12 @@
         </div>
         <div class="col col-6">
             <div class="row">
-                <div class="col col-2"><h5>Marcas:</h5></div>
-                <div class="col col-1 d-flex align-items-center"><button type="button" class="btn btn-outline-success btn-sm py-0"
-                    data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="elegirItem('marcas')">Nueva</button></div>
+                <div class="col col-2">
+                    <h5>Marcas:</h5>
+                </div>
+                <div class="col col-1 d-flex align-items-center"><button type="button"
+                        class="btn btn-outline-success btn-sm py-0" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal" (click)="elegirItem('marcas')">Nueva</button></div>
             </div>
             <table class="table table-bordered table-striped">
                 <thead class="table-bordered table-info">
@@ -40,10 +48,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let marca of marcas | paginate: { itemsPerPage: 4, currentPage: pageMarcas, id: 'marcas' }">
+                    <tr
+                        *ngFor="let marca of marcas | paginate: { itemsPerPage: 4, currentPage: pageMarcas, id: 'marcas' }">
                         <td>{{ marca.id }}</td>
                         <td>{{ marca.marca }}</td>
-                        <td><button type="button" class="btn btn-outline-danger btn-sm py-0"  (click)="eliminarItem('marcas', marca.id)">Eliminar</button></td>
+                        <td><button type="button" class="btn btn-outline-danger btn-sm py-0"
+                                (click)="eliminarItem('marcas', marca.id)">Eliminar</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -53,9 +63,12 @@
     <div class="row" style="border-top: 0.2px solid lightgrey; padding-top: 10px;">
         <div class="col col-6">
             <div class="row">
-                <div class="col col-2"><h5>Razones:</h5></div>
-                <div class="col col-1 d-flex align-items-center"><button type="button" class="btn btn-outline-success btn-sm py-0"
-                    data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="elegirItem('razones')">Nueva</button></div>
+                <div class="col col-2">
+                    <h5>Razones:</h5>
+                </div>
+                <div class="col col-1 d-flex align-items-center"><button type="button"
+                        class="btn btn-outline-success btn-sm py-0" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal" (click)="elegirItem('razones')">Nueva</button></div>
             </div>
             <table class="table table-bordered table-striped">
                 <thead class="table-bordered table-info">
@@ -66,41 +79,100 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let razon of razones | paginate: { itemsPerPage: 4, currentPage: pageRazones, id: 'razones' }">
+                    <tr
+                        *ngFor="let razon of razones | paginate: { itemsPerPage: 4, currentPage: pageRazones, id: 'razones' }">
                         <td>{{ razon.id }}</td>
                         <td>{{ razon.razon }}</td>
-                        <td><button type="button" class="btn btn-outline-danger btn-sm py-0" (click)="eliminarItem('razones', razon.id)">Eliminar</button></td>
+                        <td><button type="button" class="btn btn-outline-danger btn-sm py-0"
+                                (click)="eliminarItem('razones', razon.id)">Eliminar</button></td>
                     </tr>
                 </tbody>
             </table>
             <pagination-controls id="razones" (pageChange)="pageRazones = $event"></pagination-controls>
         </div>
         <div class="col col-6">
-            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Productos disponibles:</h5>
+                    <input type="text" class="form-control mb-2" placeholder="Buscar producto..."
+                        [(ngModel)]="busqueda" />
+
+                    <div class="border rounded p-2 bg-light" style="max-height: 220px; overflow-y: auto;">
+                        <ul class="list-unstyled">
+                            <li *ngFor="let producto of productosFiltrados()" class="form-check mb-1">
+                                <input class="form-check-input" type="checkbox" [checked]="estaEnLista(producto)"
+                                    (change)="toggleProducto(producto)" id="check-{{ producto.id }}" />
+                                <label class="form-check-label" [for]="'check-' + producto.id">
+                                    {{ producto.producto }}
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col col-6">
+                            <h5>🛒 Lista:</h5>
+                        </div>
+                        <div class="col col-1 d-flex align-items-center"><button type="button"
+                                class="btn btn-outline-success btn-sm py-0" data-bs-toggle="modal" [disabled]="listaProductos.length < 1"
+                                data-bs-target="#whatsappModal">Enviar</button></div>
+                    </div>
+                    <div class="border rounded p-2 bg-light" style="max-height: 265px; overflow-y: auto;">
+                        <ul class="list-group">
+                            <li *ngFor="let item of listaProductos"
+                                class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ item.producto }}
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="eliminarProducto(item)">✕</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar {{ item | titlecase }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formulario">
+                    <div class="mb-3">
+                        <label for="nombre" class="col-form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="crearItem(item)"
+                    [disabled]="formulario.invalid">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="whatsappModal" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar  {{ item | titlecase }}</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="whatsappModalLabel">Generar Lista</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="formulario">
-          <div class="mb-3">
-            <label for="nombre" class="col-form-label">Nombre:</label>
-            <input type="text" class="form-control" id="nombre" formControlName="nombre">
-          </div>
-        </form>
+        ¿Enviar la lista al WhatsApp?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="crearItem(item)" [disabled]="formulario.invalid">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="cargarGasto" (click)="enviarLista()" data-bs-dismiss="modal">Enviar</button>
       </div>
     </div>
   </div>
 </div>
-
