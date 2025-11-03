@@ -20,10 +20,25 @@
             <div class="col col-1 d-flex align-items-end">
                 <button class="btn btn-primary" type="submit">Buscar</button>
             </div>
-            <div class="col col-4"></div>
+            <div class="col col-4 d-flex align-items-end">
+                <div class="col col-3 me-3">
+                  <label for="type">Análisis por:</label>
+                  <ng-select [items]="typeList"
+                    bindLabel="name"
+                    bindValue="value"
+                    formControlName="type"
+                    [searchable]="true"
+                    placeholder="Tipo"
+                  ></ng-select>
+                </div>
+              <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#estadisticasModal" 
+                (click)="procesarEstadisticas(formulario.value.type)" [disabled]="datos.length === 0 || formulario.value.type === ''">
+                  Estadísticas
+              </button>
+            </div>
             <div class="card col-2">
                 <div class="card-body card-text d-flex align-items-center gap-2">
-                    <h5>Total:</h5><h5 style="color: red;">{{ totalMes | number:'1.2-2' }}</h5> 
+                    <h5>Total:</h5><h5 style="color: gray;">{{ totalMes | number:'1.2-2' }}</h5> 
                 </div>
             </div>
         </div>
@@ -45,7 +60,7 @@
                 <td style="width: 10%">{{ gasto.total }}</td>
                 <td style="width: 10%">{{ gasto.fecha }}</td>
                 <td style="width: 55%">
-                    <div style="max-height: 10em; overflow-y: auto;">
+                    <div style="max-height: 6em; overflow-y: auto;">
                     <table class="table table-sm mb-0">
                         <thead>
                             <tr>
@@ -106,6 +121,38 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-success" id="editarGasto" data-bs-dismiss="modal" (click)="editarCarga()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="estadisticasModal" tabindex="-1" aria-labelledby="estadisticasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="estadisticasLabel">Estadísticas de gastos - {{ formulario.value.type === 'anual' ? 'Anual' : getNombreMes() }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-4" *ngIf="formulario.value.type === 'razon'">
+          <canvas baseChart
+            [data]="gastosPorRazon"
+            [type]="'bar'">
+          </canvas>
+        </div>
+        <div *ngIf="formulario.value.type === 'producto'">
+          <canvas baseChart
+            [data]="gastosPorProducto"
+            [type]="'bar'">
+          </canvas>
+        </div>
+        <div *ngIf="formulario.value.type === 'anual'">
+          <canvas baseChart
+            [data]="gastosAnuales"
+            [type]="'line'"
+            [options]="chartOptions">
+          </canvas>
+        </div>
       </div>
     </div>
   </div>
