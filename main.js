@@ -12,8 +12,8 @@ function createWindow () {
       sandbox: false
     }
   });
-  //win.loadFile(path.join(__dirname, 'dist', 'administracion', 'index.html'));
-  win.loadURL('http://localhost:4200');
+  win.loadFile(path.join(__dirname, 'dist', 'administracion', 'index.html'));
+  //win.loadURL('http://localhost:4200');
 }
 
 app.whenReady().then(() => {
