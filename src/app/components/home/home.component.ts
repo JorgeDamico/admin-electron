@@ -12,7 +12,7 @@ import { ChartData, ChartOptions, ChartDataset } from 'chart.js';
 })
 export class HomeComponent implements OnInit{
 
-  title = 'Gastos';
+  title = 'Gastos: ';
   datos: any[] = [];
   datosAnuales: any[] = [];
   meses = [
@@ -37,6 +37,7 @@ export class HomeComponent implements OnInit{
   gastosPorProducto: ChartData<'bar'> | undefined;
   gastosAnuales: ChartData<'line'> | undefined;
   typeList: any[] = [{value: 'razon', name: 'Razón'}, {value:'producto', name: 'Producto'}, {value:'anual', name: 'Anual'}];
+  tipoSeleccionado: string = 'n';
 
   constructor(
     private fb: FormBuilder, 
@@ -52,10 +53,10 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.cargarDatosPorMes();
+    this.cargarDatosPorMes('n');
   }
 
-  cargarDatosPorMes() {
+  cargarDatosPorMes(type: string) {
     let month = this.formulario.value.mes;
     let year = this.formulario.value.anio;
     if (!month || !year) {
@@ -68,7 +69,9 @@ export class HomeComponent implements OnInit{
     const clave = `${month}`;
 
     const folderPath = (window as any).electronAPI.createFolderIfMissing('MisGastos');
-    const filePath = (window as any).electronAPI.joinPath(folderPath, `${year}.json`);
+    let filePath: any;
+    filePath = type === 'e' ? (window as any).electronAPI.joinPath(folderPath, `${year}-e.json`) :
+      (window as any).electronAPI.joinPath(folderPath, `${year}.json`);
 
     let data: any = {};
 
@@ -151,7 +154,7 @@ export class HomeComponent implements OnInit{
       razonMap.set(gasto.razon, (razonMap.get(gasto.razon) || 0) + gasto.total);
 
       gasto.productos?.forEach((prod: any) => {
-        productoMap.set(prod.nombre, (productoMap.get(prod.nombre) || 0) + prod.valorUnitario);
+        productoMap.set(prod.nombre, (productoMap.get(prod.nombre) || 0) + prod.valorUnitario * prod.cantidad);
       });
     });
 
