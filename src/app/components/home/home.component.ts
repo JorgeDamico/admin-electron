@@ -12,7 +12,7 @@ import { ChartData, ChartOptions, ChartDataset } from 'chart.js';
 })
 export class HomeComponent implements OnInit{
 
-  title = 'Gastos';
+  title = 'Gastos: ';
   datos: any[] = [];
   datosAnuales: any[] = [];
   meses = [
@@ -36,7 +36,9 @@ export class HomeComponent implements OnInit{
   gastosPorRazon: ChartData<'bar'> | undefined;
   gastosPorProducto: ChartData<'bar'> | undefined;
   gastosAnuales: ChartData<'line'> | undefined;
-  typeList: any[] = [{value: 'razon', name: 'Razón'}, {value:'producto', name: 'Producto'}, {value:'anual', name: 'Anual'}];
+  gastosSemanales: ChartData<'line'> | undefined;
+  typeList: any[] = [{value: 'razon', name: 'Razón'}, {value:'producto', name: 'Producto'}, {value:'anual', name: 'Anual'}, {value:'semanal', name: 'Semanal'}];
+  tipoSeleccionado: string = 'n';
 
   constructor(
     private fb: FormBuilder, 
@@ -52,10 +54,10 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.cargarDatosPorMes();
+    this.cargarDatosPorMes('n');
   }
 
-  cargarDatosPorMes() {
+  cargarDatosPorMes(type: string) {
     let month = this.formulario.value.mes;
     let year = this.formulario.value.anio;
     if (!month || !year) {
@@ -68,7 +70,9 @@ export class HomeComponent implements OnInit{
     const clave = `${month}`;
 
     const folderPath = (window as any).electronAPI.createFolderIfMissing('MisGastos');
-    const filePath = (window as any).electronAPI.joinPath(folderPath, `${year}.json`);
+    let filePath: any;
+    filePath = type === 'e' ? (window as any).electronAPI.joinPath(folderPath, `${year}-e.json`) :
+      (window as any).electronAPI.joinPath(folderPath, `${year}.json`);
 
     let data: any = {};
 
@@ -134,6 +138,7 @@ export class HomeComponent implements OnInit{
       this.gastosPorRazon = undefined;
       this.gastosPorProducto = undefined;
       this.gastosAnuales = undefined;
+      this.gastosSemanales = undefined;
       return;
     }
 
@@ -151,7 +156,7 @@ export class HomeComponent implements OnInit{
       razonMap.set(gasto.razon, (razonMap.get(gasto.razon) || 0) + gasto.total);
 
       gasto.productos?.forEach((prod: any) => {
-        productoMap.set(prod.nombre, (productoMap.get(prod.nombre) || 0) + prod.valorUnitario);
+        productoMap.set(prod.nombre, (productoMap.get(prod.nombre) || 0) + prod.valorUnitario * prod.cantidad);
       });
     });
 
@@ -214,6 +219,38 @@ export class HomeComponent implements OnInit{
             tension: 0.3,
             type: 'line'
           } as ChartDataset<'line'>
+        ]
+      };
+    }
+
+    if (type === 'semanal') {
+      const gastosPorRango = new Map<number, number>();
+
+      gastosDelMes.forEach((gasto: any) => {
+        const [diaStr, mesStr, anioStr] = gasto.fecha.split('-');
+        const fecha = new Date(+anioStr, +mesStr - 1, +diaStr);
+        const dia = fecha.getDate();
+
+        let rango = 1;
+        if (dia >= 1 && dia <= 7) rango = 1;
+        else if (dia >= 8 && dia <= 14) rango = 2;
+        else if (dia >= 15 && dia <= 21) rango = 3;
+        else rango = 4;
+
+        gastosPorRango.set(rango, (gastosPorRango.get(rango) || 0) + gasto.total);
+      });
+
+      const labels = ['1–7', '8–14', '15–21', '22–fin'];
+      const data = [1, 2, 3, 4].map(r => gastosPorRango.get(r) || 0);
+
+      this.gastosSemanales = {
+        labels,
+        datasets: [
+          {
+            label: 'Gasto semanal (rangos fijos)',
+            data,
+            backgroundColor: 'rgba(255, 37, 37, 0.2)'
+          }
         ]
       };
     }

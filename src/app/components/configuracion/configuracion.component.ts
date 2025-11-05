@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 type NombrePlural = 'productos' | 'marcas' | 'razones';
 
@@ -20,6 +19,7 @@ export class ConfiguracionComponent implements OnInit{
   pageRazones: number = 1;
   pageListaDeCompras: number = 1;
   formulario: FormGroup;
+  gastoExtraForm: FormGroup;
   item: NombrePlural = 'productos';
   listaProductos: any[] = [];
   busqueda: string = '';
@@ -29,8 +29,14 @@ export class ConfiguracionComponent implements OnInit{
     private toastr: ToastrService
   ) {
     this.formulario = this.fb.group({
-          nombre: ['', Validators.required]
-        });
+      nombre: ['', Validators.required]
+    });
+    this.gastoExtraForm = this.fb.group({
+      producto: ['', Validators.required],
+      cantidad: ['', Validators.required],
+      valorUnitario: ['', Validators.required],
+      fechaCarga: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
