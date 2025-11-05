@@ -34,7 +34,7 @@
           <ng-select [items]="typeList" bindLabel="name" bindValue="value" formControlName="type" [searchable]="true"
             placeholder="Tipo"></ng-select>
         </div>
-        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#estadisticasModal"
+        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#estadisticasModal"
           (click)="procesarEstadisticas(formulario.value.type)"
           [disabled]="datos.length === 0 || formulario.value.type === ''">
           Estadísticas
@@ -60,7 +60,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let gasto of datos | paginate: { itemsPerPage: 5, currentPage: page }">
+      <tr *ngFor="let gasto of datos | paginate: { itemsPerPage: 4, currentPage: page }">
         <td style="width: 10%">{{ gasto.razon }}</td>
         <td style="width: 10%">{{ gasto.total }}</td>
         <td style="width: 10%">{{ gasto.fecha }}</td>
@@ -153,6 +153,10 @@
         </div>
         <div *ngIf="formulario.value.type === 'anual'">
           <canvas baseChart [data]="gastosAnuales" [type]="'line'" [options]="chartOptions">
+          </canvas>
+        </div>
+        <div *ngIf="formulario.value.type === 'semanal'">
+          <canvas baseChart [data]="gastosSemanales" [type]="'bar'" >
           </canvas>
         </div>
       </div>
