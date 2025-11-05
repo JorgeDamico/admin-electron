@@ -91,6 +91,38 @@
             <pagination-controls id="razones" (pageChange)="pageRazones = $event"></pagination-controls>
         </div>
         <div class="col col-6">
+            <!-- <div class="row">
+                <div class="col col-4">
+                    <h5>Gasto Extra:</h5>
+                </div>
+            </div>
+            <form [formGroup]="gastoExtraForm">
+                <div class="row">
+                   <div class="col-4 mb-3">
+                        <label for="producto" class="col-form-label">Producto:</label>
+                        <input type="text" class="form-control" id="producto" formControlName="producto">
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label for="cantidad" class="col-form-label">Cantidad:</label>
+                        <input type="number" class="form-control" id="cantidad" formControlName="cantidad">
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label for="valorUnitario" class="col-form-label">Valor Unitario:</label>
+                        <input type="number" class="form-control" id="valorUnitario" formControlName="valorUnitario" step="any">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 mb-3">
+                        <label for="fechaCarga" class="col-form-label">Fecha:</label>
+                        <input type="date" class="form-control" id="fechaCarga" formControlName="fechaCarga" step="any">
+                    </div>
+                    <div class="col-4 mb-3 d-flex justify-content-center align-items-end">
+                        <button type="button" class="btn btn-secondary me-3" (click)="cancelarGastoExtra()" [disabled]="gastoExtraForm.invalid">Cancelar</button>
+                        <button type="button" class="btn btn-primary" (click)="guardarGastoExtra()" [disabled]="gastoExtraForm.invalid">Guardar</button>
+                    </div>
+                    <div class="col-4 mb-3"></div>
+                </div>
+            </form> -->
             <div class="row">
                 <div class="col-md-6">
                     <h5>Productos disponibles:</h5>

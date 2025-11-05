@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CargaComponent implements OnInit{
 
-  title = 'Carga';
+  title = 'Carga de Gastos';
   formulario: FormGroup;
   formularioModal: FormGroup;
   razones: any[] = [];
@@ -107,11 +107,13 @@ export class CargaComponent implements OnInit{
     this.formularioModal.reset();
   }
 
-  cargarGasto() {
+  cargarGasto(type: string) {
     const idEditando = history.state.gasto?.id;
     const [year, month, day] = this.formulario.value.fecha.split('-');
     const folderPath = (window as any).electronAPI.createFolderIfMissing('MisGastos');
-    const filePath = (window as any).electronAPI.joinPath(folderPath, `${year}.json`);
+    let filePath: any;
+    filePath = type === 'e' ? (window as any).electronAPI.joinPath(folderPath, `${year}-e.json`) :
+      (window as any).electronAPI.joinPath(folderPath, `${year}.json`);
 
     let data: any = {};
 
@@ -151,7 +153,7 @@ export class CargaComponent implements OnInit{
     }
 
     (window as any).electronAPI.writeFile(filePath, JSON.stringify(data, null, 2));
-    console.log(`Gasto guardado con ID ${nuevoId}`);
+    
     this.cancelarGasto();
     this.limpiarModal();
     this.mostrarMensaje();
